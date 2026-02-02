@@ -1,0 +1,85 @@
+import express from "express";
+import fs from "fs";
+
+// create server
+const app = express();
+
+// Browser Page
+app.get("/", (req, res) => {
+  res.send("This is the main page");
+});
+
+// Get All Details of Students
+app.get("/getAll", (req, res) => {
+  fs.readFile("info.json", "utf-8", (err, data) => {
+    if (err) {
+        return res.send("error");
+    }
+    res.send(JSON.parse(data));
+  });
+});
+
+// Access Student By Their Id
+app.get("/getUser/:id", (req, res) => {
+  fs.readFile("info.json", "utf-8", (err, data) => {
+    if (err) {
+        return res.send("error");
+    }
+
+    let users = JSON.parse(data);
+    let user = users.find(u => u.id == req.params.id);
+
+    res.send(user || "not found");
+  });
+});
+
+// Add User 
+app.get("/addUser/:id/:name/:email/:course", (req, res) => {
+  fs.readFile("info.json", "utf-8", (err, data) => {
+    let users = [];
+
+    if (!err) users = JSON.parse(data);
+
+    users.push(req.params);
+
+    fs.writeFile("info.json", JSON.stringify(users, null, 2), () => {
+      res.send("user added");
+    });
+  });
+});
+
+// Update User
+app.get("/updateUser/:id/:name", (req, res) => {
+  fs.readFile("info.json", "utf-8", (err, data) => {
+    if (err) return res.send("error");
+
+    let users = JSON.parse(data);
+
+    users.forEach(u => {
+      if (u.id == req.params.id) u.name = req.params.name;
+    });
+
+    fs.writeFile("info.json", JSON.stringify(users, null, 2), () => {
+      res.send("updated");
+    });
+  });
+});
+
+// Delete User
+app.get("/deleteUser/:id", (req, res) => {
+  fs.readFile("info.json", "utf-8", (err, data) => {
+    if (err) return res.send("error");
+
+    let users = JSON.parse(data);
+    users = users.filter(u => u.id != req.params.id);
+
+    fs.writeFile("info.json", JSON.stringify(users, null, 2), () => {
+      res.send("deleted");
+    });
+  });
+});
+
+// Server Port Number
+app.listen(3000, () => {
+  console.log("server running on http://localhost:3000");
+});
