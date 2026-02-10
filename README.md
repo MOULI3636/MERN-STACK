@@ -1,4 +1,4 @@
-# MERN Stack Project Repository
+# MERN Stack Application Repository
 
 ## Overview
 This repository comprises projects developed during a structured **learning and placement preparation phase** focused on the **MERN Stack**. The objective of this repository is to apply theoretical knowledge through practical implementation while developing a strong understanding of backend systems, RESTful API design, server-side processing, and basic frontend integration.
